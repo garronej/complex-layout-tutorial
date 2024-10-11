@@ -1,97 +1,98 @@
-
 import { tss } from "tss";
 import { projectIds, type ProjectId } from "./projectIds";
 import { useScrollNavigation } from "tools/useScrollNavigation";
+import type { Link } from "type-route";
 
 type Props = {
-    className?: string;
-    projectId: ProjectId;
-    onChangeProjectId: (projectId: ProjectId) => void;
-    onSeeProjectDetails: () => void;
+  className?: string;
+  projectId: ProjectId;
+  getChangeProjectIdLink: (projectId: ProjectId) => Link;
+  onSeeProjectDetails: () => void;
 };
 
 export default function ProjectGallery(props: Props) {
+  const { className, projectId, getChangeProjectIdLink, onSeeProjectDetails } =
+    props;
 
-    const { className, projectId, onChangeProjectId, onSeeProjectDetails } = props;
+  const { cx, classes } = useStyles();
 
-    const { cx, classes } = useStyles();
+  const nextProjectLink = (() => {
+    const currentIndex = projectIds.indexOf(projectId);
+    let nextIndex = currentIndex + 1;
 
-    const goToNextProject = () => {
-        const currentIndex = projectIds.indexOf(projectId);
-        let nextIndex = currentIndex + 1;
+    if (nextIndex === projectIds.length) {
+      nextIndex = 0;
+    }
 
-        if (nextIndex === projectIds.length) {
-            nextIndex = 0;
-        }
+    const link = getChangeProjectIdLink(projectIds[nextIndex]);
 
-        onChangeProjectId(projectIds[nextIndex]);
-    };
+    return link;
+  })();
 
-    const goToPreviousProject = () => {
-        const currentIndex = projectIds.indexOf(projectId);
-        let previousIndex = currentIndex - 1;
+  const previousProjectLink = (() => {
+    const currentIndex = projectIds.indexOf(projectId);
+    let previousIndex = currentIndex - 1;
 
-        if (previousIndex === -1) {
-            previousIndex = projectIds.length - 1;
-        }
+    if (previousIndex === -1) {
+      previousIndex = projectIds.length - 1;
+    }
 
-        onChangeProjectId(projectIds[previousIndex]);
-    };
+    const link = getChangeProjectIdLink(projectIds[previousIndex]);
 
-    useScrollNavigation(direction => {
-        switch (direction) {
-            case "up": 
-                goToPreviousProject();
-                break;
-            case "down":
-                goToNextProject();
-                break;
-        }
-    });
+    return link;
+  })();
 
-    return (
-        <div className={cx(classes.root, className)}>
-            <h1>Project Gallery</h1>
-            <p>Describing {projectId}</p>
-            <div>
-                {projectIds.map(projectId_i => (
-                    <div
-                        key={projectId_i}
-                        className={cx(classes.project, projectId_i === projectId ? classes.selectedProject : undefined)}
-                    >
-                        <h1>{projectId_i}</h1>
-                        {projectId_i === projectId && <button onClick={() => onSeeProjectDetails()}>View details</button>}
-                    </div>
-                ))}
-            </div>
-            <div>
-                <br />
-                <br />
-                <button
-                    onClick={goToPreviousProject}
-                >
-                    Previous
-                </button>
-                <button
-                    onClick={goToNextProject}
-                >
-                    Next
-                </button>
-            </div>
+  useScrollNavigation((direction) => {
+    switch (direction) {
+      case "up":
+        previousProjectLink.onClick();
+        break;
+      case "down":
+        nextProjectLink.onClick();
+        break;
+    }
+  });
 
-        </div>
-    );
-
+  return (
+    <div className={cx(classes.root, className)}>
+      <h1>Project Gallery</h1>
+      <p>Describing {projectId}</p>
+      <div>
+        {projectIds.map((projectId_i) => (
+          <div
+            key={projectId_i}
+            className={cx(
+              classes.project,
+              projectId_i === projectId ? classes.selectedProject : undefined
+            )}
+          >
+            <h1>{projectId_i}</h1>
+            {projectId_i === projectId && (
+              <button onClick={() => onSeeProjectDetails()}>
+                View details
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+      <div>
+        <br />
+        <br />
+        <a {...previousProjectLink}>Previous</a>
+        <a {...nextProjectLink}>Next</a>
+      </div>
+    </div>
+  );
 }
 
 const useStyles = tss.withName({ ProjectGallery }).create({
-    root: {
-        border: '5px solid green',
-    },
-    project: {
-        border: "1px solid black",
-    },
-    selectedProject: {
-        border: "5px solid red",
-    }
+  root: {
+    border: "5px solid green",
+  },
+  project: {
+    border: "1px solid black",
+  },
+  selectedProject: {
+    border: "5px solid red",
+  },
 });

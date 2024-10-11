@@ -23,12 +23,12 @@ export default function Page(props: Props) {
           <ProjectGallery
             className={classes.gallery}
             projectId={route.params.projectId}
-            onChangeProjectId={(projectId) => {
-              routes[route.name]({
+            getChangeProjectIdLink={(projectId) => 
+              routes.projects({
                 ...route.params,
                 projectId,
-              }).push();
-            }}
+              }).link
+            }
             onSeeProjectDetails={() => {
               routes[route.name]({
                 ...route.params,
