@@ -32,6 +32,7 @@ export default function Page(props: Props) {
             onSeeProjectDetails={() => {
               routes[route.name]({
                 ...route.params,
+                detailsIndex: 0,
                 isGalleryVisible: false,
               }).push();
             }}
@@ -40,6 +41,13 @@ export default function Page(props: Props) {
           <ProjectDetails
             className={classes.details}
             projectId={route.params.projectId}
+            detailsIndex={route.params.detailsIndex}
+            setDetailsIndex={detailsIndex => {
+                routes[route.name]({
+                    ...route.params,
+                    detailsIndex,
+                }).replace();
+            }}
             onBackToGallery={() => {
               routes[route.name]({
                 ...route.params,

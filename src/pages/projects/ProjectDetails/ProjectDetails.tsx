@@ -1,6 +1,6 @@
 import { tss } from "tss";
 import { type ProjectId } from "../projectIds";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense } from "react";
 import { useScrollNavigation } from "tools/useScrollNavigation";
 const Project1Details = lazy(() => import("./Project1Details"));
 const Project2Details = lazy(() => import("./Project2Details"));
@@ -9,23 +9,23 @@ const Project3Details = lazy(() => import("./Project3Details"));
 export type Props = {
     className?: string;
     projectId: ProjectId;
+    detailsIndex: number;
+    setDetailsIndex: (index: number) => void;
     onBackToGallery: () => void;
 };
 
 export default function ProjectDetails(props: Props) {
 
-    const { className, projectId, onBackToGallery } = props;
+    const { className, projectId, detailsIndex, setDetailsIndex , onBackToGallery } = props;
 
     const { cx, classes } = useStyles();
 
-    const [detailsIndex, setDetailsIndex] = useState(0);
-
     const incrementDetailsIndex = () => {   
-        setDetailsIndex(prevIndex => prevIndex + 1);
+        setDetailsIndex(detailsIndex + 1);
     }
 
     const decrementDetailsIndex = () => {
-        setDetailsIndex(prevIndex => prevIndex - 1);
+        setDetailsIndex(detailsIndex - 1);
     }
 
     useScrollNavigation(direction => {
