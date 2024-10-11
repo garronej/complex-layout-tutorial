@@ -3,8 +3,8 @@ import { tss } from "tss";
 import type { PageRoute } from "./route";
 
 export type Props = {
-    route: PageRoute;
     className?: string;
+    route: PageRoute;
 };
 
 export default function Page(props: Props) {

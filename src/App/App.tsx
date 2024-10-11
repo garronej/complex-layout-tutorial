@@ -2,8 +2,7 @@ import { tss, GlobalStyles } from "tss";
 import { Header } from "./Header";
 import { Suspense } from "react";
 import { pages, pageIds } from "pages";
-import { useRoute } from "routes";
-import { routes, RouteProvider } from "routes";
+import { useRoute, RouteProvider } from "routes";
 
 export function App() {
   return (
@@ -40,7 +39,7 @@ function AppContextualized() {
           <Suspense fallback={<p>Loading...</p>}>
             {(() => {
               for (const pageId of pageIds) {
-                //You must be able to replace "home" by any other page and get no type error.
+                //You must be able to replace "contact" by any other page and get no type error.
                 const page = pages[pageId as "contact"];
 
                 if (page.routeGroup.has(route)) {

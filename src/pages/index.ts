@@ -11,8 +11,8 @@ import type { RouterOpts } from "type-route";
 export const pages = {
     projects,
     aboutMe,
-    contact,
-    page404
+    page404,
+    contact
 };
 
 export const routeDefs = {} as UnionToIntersection<
