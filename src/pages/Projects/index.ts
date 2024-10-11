@@ -1,2 +1,3 @@
-import Project from "./Projects";
-export default Project;
+import { lazy } from "react";
+export * from "./route";
+export const LazyComponent = lazy(() => import("./Projects"));

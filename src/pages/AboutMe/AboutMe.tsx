@@ -1,11 +1,13 @@
 
 import { tss } from "tss";
+import type { PageRoute } from "./route";
 
 export type Props = {
+    route: PageRoute;
     className?: string;
 };
 
-export default function Contact(props: Props) {
+export default function AboutMe(props: Props) {
 
     const { className } = props;
 
@@ -14,15 +16,15 @@ export default function Contact(props: Props) {
     return (
         <div className={cx(classes.root, className)}>
             <div>
-                <h1>Contact Title</h1>
-                <p>Contact description goes here.</p>
+                <h1>AboutMe Title</h1>
+                <p>AboutMe description goes here.</p>
             </div>
         </div>
     );
 
 }
 
-const useStyles = tss.withName({ Contact }).create({
+const useStyles = tss.withName({ AboutMe }).create({
     root: {
         border: '5px solid yellow',
         display: 'flex',

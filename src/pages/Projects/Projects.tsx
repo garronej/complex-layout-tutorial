@@ -2,17 +2,22 @@
 import { tss } from "tss";
 import { lazy, Suspense, useState } from "react";
 import { ProjectId, projectIds } from "./projectIds";
+import type { PageRoute } from "./route";
 
 const ProjectGallery = lazy(() => import("./ProjectGallery"));
 const ProjectDetails = lazy(() => import("./ProjectDetails"));
 
 export type Props = {
     className?: string;
+    route: PageRoute;
 };
 
 export default function Project(props: Props) {
 
-    const { className } = props;
+
+    const { className, route } = props;
+
+    console.log(route.params.project);
 
     const { cx, classes } = useStyles();
 
