@@ -7,11 +7,11 @@ type Props = {
   className?: string;
   projectId: ProjectId;
   getChangeProjectIdLink: (projectId: ProjectId) => Link;
-  onSeeProjectDetails: () => void;
+  projectDetailsLink: Link;
 };
 
 export default function ProjectGallery(props: Props) {
-  const { className, projectId, getChangeProjectIdLink, onSeeProjectDetails } =
+  const { className, projectId, getChangeProjectIdLink, projectDetailsLink } =
     props;
 
   const { cx, classes } = useStyles();
@@ -68,9 +68,9 @@ export default function ProjectGallery(props: Props) {
           >
             <h1>{projectId_i}</h1>
             {projectId_i === projectId && (
-              <button onClick={() => onSeeProjectDetails()}>
+              <a {...projectDetailsLink}>
                 View details
-              </button>
+              </a>
             )}
           </div>
         ))}
@@ -79,6 +79,7 @@ export default function ProjectGallery(props: Props) {
         <br />
         <br />
         <a {...previousProjectLink}>Previous</a>
+        {" | "}
         <a {...nextProjectLink}>Next</a>
       </div>
     </div>

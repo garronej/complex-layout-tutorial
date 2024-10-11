@@ -29,13 +29,13 @@ export default function Page(props: Props) {
                 projectId,
               }).link
             }
-            onSeeProjectDetails={() => {
+            projectDetailsLink={
               routes[route.name]({
                 ...route.params,
                 detailsIndex: 0,
                 gallery: false,
-              }).push();
-            }}
+              }).link
+            }
           />
         ) : (
           <ProjectDetails
