@@ -13,7 +13,7 @@ import { id } from "tsafe/id";
 export const routeDefs = {
     projects: defineRoute(
         {
-            projectId: param.query.optional
+            projectId: param.path.optional
                 .ofType(
                     id<ValueSerializer<ProjectId>>({
                         parse: raw =>
@@ -24,10 +24,10 @@ export const routeDefs = {
                     })
                 )
                 .default(projectIds[0]),
-            isGalleryVisible: param.query.optional.boolean.default(true),
+            gallery: param.query.optional.boolean.default(true),
             detailsIndex: param.query.optional.number.default(0)
         },
-        () => [`/projects`, "/"]
+        ({ projectId }) => [`/projects/${projectId}`, "/"]
 
     )
 };

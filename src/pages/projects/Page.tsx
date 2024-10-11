@@ -19,7 +19,7 @@ export default function Page(props: Props) {
   return (
     <div className={cx(classes.root, className)}>
       <Suspense fallback={<p>Loading...</p>}>
-        {route.params.isGalleryVisible ? (
+        {route.params.gallery ? (
           <ProjectGallery
             className={classes.gallery}
             projectId={route.params.projectId}
@@ -33,7 +33,7 @@ export default function Page(props: Props) {
               routes[route.name]({
                 ...route.params,
                 detailsIndex: 0,
-                isGalleryVisible: false,
+                gallery: false,
               }).push();
             }}
           />
@@ -51,7 +51,7 @@ export default function Page(props: Props) {
             onBackToGallery={() => {
               routes[route.name]({
                 ...route.params,
-                isGalleryVisible: true,
+                gallery: true,
               }).push();
             }}
           />
