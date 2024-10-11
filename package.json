@@ -15,6 +15,7 @@
     "powerhooks": "^1.0.13",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "tsafe": "^1.7.5",
     "tss-react": "^4.9.13",
     "type-route": "^1.1.0"
   },

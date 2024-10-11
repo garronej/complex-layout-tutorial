@@ -1,74 +1,83 @@
-
 import { tss, GlobalStyles } from "tss";
 import { Header } from "./Header";
-import { useState, lazy, Suspense } from "react";
-import type { PageId } from "pages";
-
-const Projects = lazy(() => import("pages/Projects"));
-const Contact = lazy(() => import("pages/Contact"));
-const AboutMe = lazy(() => import("pages/AboutMe"));
+import { Suspense } from "react";
+import { pages, pageIds } from "pages";
+import { useRoute } from "routes";
+import { routes, RouteProvider } from "routes";
 
 export function App() {
+  return (
+    <RouteProvider>
+      <AppContextualized />
+    </RouteProvider>
+  );
+}
 
-    const { classes } = useStyles();
-    const [pageId, setPageId] = useState<PageId>("projects");
+function AppContextualized() {
+  const { classes } = useStyles();
+  const route = useRoute();
 
-    return (
-        <>
-            <GlobalStyles
-                styles={{
-                    body: {
-                        margin: 0,
-                        padding: 0,
-                        overflow: "hidden",
-                    },
-                    "*": {
-                        boxSizing: "border-box",
-                    }
-                }}
-            />
-            <div className={classes.root}>
-                <Header
-                    pageId={pageId}
-                    onPageChange={pageId => setPageId(pageId)}
-                    className={classes.header}
-                />
-                <main className={classes.main}>
-                    <Suspense fallback={<p>Loading...</p>}>
-                        {(() => {
-                            switch (pageId) {
-                                case "projects":
-                                    return <Projects className={classes.page} />;
-                                case "contact":
-                                    return <Contact className={classes.page} />;
-                                case "about me":
-                                    return <AboutMe className={classes.page} />;
-                            }
-                        })()}
-                    </Suspense>
-                </main>
-            </div>
-        </>
-    );
+  return (
+    <>
+      <GlobalStyles
+        styles={{
+          body: {
+            margin: 0,
+            padding: 0,
+            overflow: "hidden",
+          },
+          "*": {
+            boxSizing: "border-box",
+          },
+        }}
+      />
+      <div className={classes.root}>
+        <Header
+          pageId={route.name}
+          onPageChange={(pageId) => routes[pageId]().push()}
+          className={classes.header}
+        />
+        <main className={classes.main}>
+          <Suspense fallback={<p>Loading...</p>}>
+            {(() => {
+              for (const pageId of pageIds) {
+                //You must be able to replace "home" by any other page and get no type error.
+                const page = pages[pageId as "contact"];
 
+                if (page.routeGroup.has(route)) {
+                  return (
+                    <page.LazyComponent
+                      className={classes.page}
+                      route={route}
+                    />
+                  );
+                }
+              }
 
+              return <pages.page404.LazyComponent />;
+            })()}
+          </Suspense>
+        </main>
+      </div>
+    </>
+  );
 }
 
 const useStyles = tss.withName({ App }).create({
-    root: {
-        height: '100vh',
-        border: '10px solid red',
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    header: {
-        height: 50
-    },
-    main: {
-        flex: 1,
-        border: '5px solid green',
-    },
-    page: {
-        height: '100%',
-    }
+  root: {
+    height: "100vh",
+    border: "10px solid red",
+    display: "flex",
+    flexDirection: "column",
+  },
+  header: {
+    height: 50,
+  },
+  main: {
+    flex: 1,
+    border: "5px solid green",
+  },
+  page: {
+    height: "100%",
+  },
 });

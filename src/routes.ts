@@ -5,5 +5,3 @@ export const { RouteProvider, useRoute, routes, session } = createRouter(
     routerOpts,
     routeDefs
 );
-
-
