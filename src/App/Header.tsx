@@ -1,17 +1,15 @@
 import { tss } from "tss";
 import  { type PageId, pageIds } from "pages";
+import { routes } from "routes";
 
 type Props = {
   className?: string;
   pageId: PageId | false;
-  onPageChange: (pageId: PageId) => void;
 };
 
 
 export function Header(props: Props) {
-  const { className, pageId, onPageChange } = props;
-
-  console.log({ pageId });
+  const { className, pageId } = props;
 
   const { cx, classes } = useStyles();
 
@@ -22,13 +20,13 @@ export function Header(props: Props) {
       {pageIds
         .filter((pageId) => pageId !== "page404")
         .map((pageId_i) => (
-          <button
+          <a
             key={pageId_i}
             className={pageId_i === pageId ? classes.activePage : undefined}
-            onClick={() => onPageChange(pageId_i)}
+            {...routes[pageId_i]().link}
           >
             {pageId_i}
-          </button>
+          </a>
         ))}
     </header>
   );
@@ -39,6 +37,7 @@ const useStyles = tss.withName({ Header }).create({
     border: "5px solid blue",
     display: "flex",
     alignItems: "center",
+    gap: 5
   },
   activePage: {
     border: "2px solid red",

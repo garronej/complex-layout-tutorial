@@ -34,7 +34,6 @@ function AppContextualized() {
       <div className={classes.root}>
         <Header
           pageId={route.name}
-          onPageChange={(pageId) => routes[pageId]().push()}
           className={classes.header}
         />
         <main className={classes.main}>

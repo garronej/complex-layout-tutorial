@@ -9,8 +9,8 @@ import type { RouterOpts } from "type-route";
 
 
 export const pages = {
-    aboutMe,
     projects,
+    aboutMe,
     contact,
     page404
 };
