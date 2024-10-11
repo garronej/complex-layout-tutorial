@@ -19,15 +19,17 @@ export function Header(props: Props) {
     <header className={cx(classes.root, className)}>
       <h1>Amelia</h1>
       <div style={{ flex: 1 }} />
-      {pageIds.map((pageId_i) => (
-        <button
-          key={pageId_i}
-          className={pageId_i === pageId ? classes.activePage : undefined}
-          onClick={() => onPageChange(pageId_i)}
-        >
-          {pageId_i}
-        </button>
-      ))}
+      {pageIds
+        .filter((pageId) => pageId !== "page404")
+        .map((pageId_i) => (
+          <button
+            key={pageId_i}
+            className={pageId_i === pageId ? classes.activePage : undefined}
+            onClick={() => onPageChange(pageId_i)}
+          >
+            {pageId_i}
+          </button>
+        ))}
     </header>
   );
 }
