@@ -23,7 +23,7 @@ export default function Page(props: Props) {
           <ProjectGallery
             className={classes.gallery}
             projectId={route.params.projectId}
-            getChangeProjectIdLink={(projectId) => 
+            getChangeProjectIdLink={(projectId) =>
               routes.projects({
                 ...route.params,
                 projectId,
@@ -42,18 +42,18 @@ export default function Page(props: Props) {
             className={classes.details}
             projectId={route.params.projectId}
             detailsIndex={route.params.detailsIndex}
-            setDetailsIndex={detailsIndex => {
-                routes[route.name]({
-                    ...route.params,
-                    detailsIndex,
-                }).replace();
-            }}
-            onBackToGallery={() => {
+            getChangeDetailIndexLink={(detailsIndex) =>
+              routes[route.name]({
+                ...route.params,
+                detailsIndex,
+              }).link
+            }
+            backToGalleryLink={
               routes[route.name]({
                 ...route.params,
                 gallery: true,
-              }).push();
-            }}
+              }).link
+            }
           />
         )}
       </Suspense>
