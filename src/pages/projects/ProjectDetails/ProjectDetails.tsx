@@ -1,59 +1,41 @@
 import { tss } from "tss";
-import { type ProjectId } from "../projectIds";
 import { lazy, Suspense } from "react";
-import { useScrollNavigation } from "tools/useScrollNavigation";
-import type { Link } from "type-route";
-import Button from "@mui/material/Button";
+import { routes } from "routes";
+import type { PageRoute } from "../route";
 const Project1Details = lazy(() => import("./Project1Details"));
 const Project2Details = lazy(() => import("./Project2Details"));
 const Project3Details = lazy(() => import("./Project3Details"));
 
 export type Props = {
   className?: string;
-  projectId: ProjectId;
-  detailsIndex: number;
-  getChangeDetailIndexLink: (detailsIndex: number) => Link;
-  backToGalleryLink: Link;
+  route: PageRoute;
 };
 
 export default function ProjectDetails(props: Props) {
-  const {
-    className,
-    projectId,
-    detailsIndex,
-    getChangeDetailIndexLink,
-    backToGalleryLink,
-  } = props;
+  const { className, route } = props;
 
   const { cx, classes } = useStyles();
-
-  const nextDetailsLink = getChangeDetailIndexLink(detailsIndex + 1);
-  const previousDetailsLink = getChangeDetailIndexLink(detailsIndex - 1);
-
-  useScrollNavigation((direction) => {
-    switch (direction) {
-      case "up":
-        previousDetailsLink.onClick();
-        break;
-      case "down":
-        nextDetailsLink.onClick();
-        break;
-    }
-  });
 
   return (
     <div className={cx(classes.root, className)}>
       <div className={classes.backToGalleryWrapper}>
-        <a {...backToGalleryLink}>Back to Gallery</a>
+        <a
+          {...routes.projects({
+            ...route.params,
+            gallery: true,
+          }).link}
+        >
+          Back to Gallery
+        </a>
       </div>
       <div className={classes.content}>
         <Suspense fallback={<p>Loading...</p>}>
           {(() => {
-            switch (projectId) {
+            switch (route.params.projectId) {
               case "project1":
                 return (
                   <Project1Details
-                    detailsIndex={detailsIndex}
+                    route={route}
                     className={classes.projectDetails}
                   />
                 );
@@ -64,15 +46,6 @@ export default function ProjectDetails(props: Props) {
             }
           })()}
         </Suspense>
-      </div>
-      <div className={classes.navigationArrowsWrapper}>
-        <div>
-          <Button {...previousDetailsLink} disabled={detailsIndex === 0}>
-            Previous
-          </Button>
-          {" | "}
-          <Button {...nextDetailsLink}>Next</Button>
-        </div>
       </div>
     </div>
   );
@@ -96,11 +69,5 @@ const useStyles = tss.withName({ ProjectDetails }).create({
   },
   projectDetails: {
     height: "100%",
-  },
-  navigationArrowsWrapper: {
-    display: "flex",
-    justifyContent: "center",
-    paddingTop: 40,
-    paddingBottom: 40,
   },
 });

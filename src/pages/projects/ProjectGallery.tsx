@@ -1,54 +1,54 @@
 import { tss } from "tss";
-import { projectIds, type ProjectId } from "./projectIds";
+import { projectIds } from "./projectIds";
 import { useScrollNavigation } from "tools/useScrollNavigation";
-import type { Link } from "type-route";
+import type { PageRoute } from "./route";
+import { routes } from "routes";
+import Button from "@mui/material/Button";
 
 type Props = {
   className?: string;
-  projectId: ProjectId;
-  getChangeProjectIdLink: (projectId: ProjectId) => Link;
-  projectDetailsLink: Link;
+  route: PageRoute;
 };
 
 export default function ProjectGallery(props: Props) {
-  const { className, projectId, getChangeProjectIdLink, projectDetailsLink } =
-    props;
+  const { className, route } = props;
 
   const { cx, classes } = useStyles();
 
-  const nextProjectLink = (() => {
-    const currentIndex = projectIds.indexOf(projectId);
-    let nextIndex = currentIndex + 1;
+  const previousProjectRoute = (() => {
+    const i = projectIds.indexOf(route.params.projectId);
 
-    if (nextIndex === projectIds.length) {
-      nextIndex = 0;
+    if (i === 0) {
+      return undefined;
     }
 
-    const link = getChangeProjectIdLink(projectIds[nextIndex]);
-
-    return link;
+    return routes.projects({
+      ...route.params,
+      projectId: projectIds[i - 1],
+    });
   })();
 
-  const previousProjectLink = (() => {
-    const currentIndex = projectIds.indexOf(projectId);
-    let previousIndex = currentIndex - 1;
+  const nextProjectRoute = (() => {
+    const i = projectIds.indexOf(route.params.projectId);
 
-    if (previousIndex === -1) {
-      previousIndex = projectIds.length - 1;
+    if (i === projectIds.length - 1) {
+      return undefined;
     }
 
-    const link = getChangeProjectIdLink(projectIds[previousIndex]);
-
-    return link;
+    return routes.projects({
+      ...route.params,
+      projectId: projectIds[i + 1],
+    });
   })();
 
   useScrollNavigation((direction) => {
     switch (direction) {
       case "up":
-        previousProjectLink.onClick();
+        previousProjectRoute?.replace();
         break;
       case "down":
-        nextProjectLink.onClick();
+        console.log(nextProjectRoute);
+        nextProjectRoute?.replace();
         break;
     }
   });
@@ -56,19 +56,28 @@ export default function ProjectGallery(props: Props) {
   return (
     <div className={cx(classes.root, className)}>
       <h1>Project Gallery</h1>
-      <p>Describing {projectId}</p>
+      <p>Describing {route.params.projectId}</p>
       <div>
         {projectIds.map((projectId_i) => (
           <div
             key={projectId_i}
             className={cx(
               classes.project,
-              projectId_i === projectId ? classes.selectedProject : undefined
+              projectId_i === route.params.projectId
+                ? classes.selectedProject
+                : undefined
             )}
           >
             <h1>{projectId_i}</h1>
-            {projectId_i === projectId && (
-              <a {...projectDetailsLink}>
+            {projectId_i === route.params.projectId && (
+              <a
+                {...routes.projects({
+                  ...route.params,
+                  gallery: false,
+                  projectId: projectId_i,
+                  detailsIndex: 0,
+                }).link}
+              >
                 View details
               </a>
             )}
@@ -78,9 +87,16 @@ export default function ProjectGallery(props: Props) {
       <div>
         <br />
         <br />
-        <a {...previousProjectLink}>Previous</a>
+        <Button
+          {...previousProjectRoute?.link}
+          disabled={previousProjectRoute === undefined}
+        >
+          Previous
+        </Button>
         {" | "}
-        <a {...nextProjectLink}>Next</a>
+        <Button {...nextProjectRoute?.link} disabled={nextProjectRoute === undefined}>
+          Next
+        </Button>
       </div>
     </div>
   );
