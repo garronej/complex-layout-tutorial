@@ -18,6 +18,11 @@ export default function Page(props: Props) {
             <div>
                 <h1>AboutMe Title</h1>
                 <p>AboutMe description goes here.</p>
+                {(new Array(100)).fill(null).map((_, i) => (
+                    <p key={i}>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    </p>
+                ))}
             </div>
         </div>
     );

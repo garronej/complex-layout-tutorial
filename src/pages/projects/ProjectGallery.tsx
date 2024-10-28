@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { tss } from "tss";
 import { projectIds } from "./projectIds";
-import { useScrollNavigation } from "tools/useScrollNavigation";
 import type { PageRoute } from "./route";
 import { routes } from "routes";
 import Button from "@mui/material/Button";
+import { useFixedScroll } from "tools/fixed-scroll";
+import { useEffect } from "react";
 
 type Props = {
   className?: string;
@@ -14,6 +16,40 @@ export default function ProjectGallery(props: Props) {
   const { className, route } = props;
 
   const { cx, classes } = useStyles();
+
+  const { currentScrollPercentage } = useFixedScroll({
+    height: 3000,
+    initialScrollPercentage: 0,
+  });
+
+  useEffect(() => {
+
+    console.log({ currentScrollPercentage });
+
+    if (currentScrollPercentage > 80) {
+      routes[route.name]({
+        ...route.params,
+        projectId: projectIds[2],
+      }).replace();
+
+      return;
+    }
+
+    if (currentScrollPercentage > 20) {
+      routes[route.name]({
+        ...route.params,
+        projectId: projectIds[1],
+      }).replace();
+
+      return;
+    }
+
+    routes[route.name]({
+      ...route.params,
+      projectId: projectIds[0],
+    }).replace();
+
+  }, [currentScrollPercentage]);
 
   const previousProjectRoute = (() => {
     const i = projectIds.indexOf(route.params.projectId);
@@ -41,6 +77,7 @@ export default function ProjectGallery(props: Props) {
     });
   })();
 
+  /*
   useScrollNavigation((direction) => {
     switch (direction) {
       case "up":
@@ -52,6 +89,7 @@ export default function ProjectGallery(props: Props) {
         break;
     }
   });
+  */
 
   return (
     <div className={cx(classes.root, className)}>
@@ -94,7 +132,10 @@ export default function ProjectGallery(props: Props) {
           Previous
         </Button>
         {" | "}
-        <Button {...nextProjectRoute?.link} disabled={nextProjectRoute === undefined}>
+        <Button
+          {...nextProjectRoute?.link}
+          disabled={nextProjectRoute === undefined}
+        >
           Next
         </Button>
       </div>

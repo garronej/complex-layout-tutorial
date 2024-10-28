@@ -2,45 +2,34 @@ import Button from "@mui/material/Button";
 import { tss } from "tss";
 import { routes } from "routes";
 import type { PageRoute } from "../route";
-import { useScrollNavigation } from "tools/useScrollNavigation";
 
 type Props = {
   className?: string;
   route: PageRoute;
-  detailsIndex: number;
-  isLastDetails: boolean;
+  detailsCount: number;
 };
 
 export function DetailsNavigationButtons(props: Props) {
-  const { className, route, detailsIndex, isLastDetails } = props;
+  const { className, route, detailsCount } = props;
+
+
 
   const { classes, cx } = useStyles();
 
   const previousDetailsRoute =
-    detailsIndex === 0
+    route.params.detailsIndex === 0
       ? undefined
       : routes.projects({
           ...route.params,
-          detailsIndex: detailsIndex - 1,
+          detailsIndex: route.params.detailsIndex - 1,
         });
 
-  const nextDetailsRoute = isLastDetails
+  const nextDetailsRoute = detailsCount - 1 === route.params.detailsIndex
     ? undefined
     : routes.projects({
         ...route.params,
-        detailsIndex: detailsIndex + 1,
+        detailsIndex: route.params.detailsIndex + 1,
       });
-
-  useScrollNavigation((direction) => {
-    switch (direction) {
-      case "up":
-        previousDetailsRoute?.replace();
-        break;
-      case "down":
-        nextDetailsRoute?.replace();
-        break;
-    }
-  });
 
   return (
     <div className={cx(classes.root, className)}>

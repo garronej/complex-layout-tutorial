@@ -1,0 +1,1 @@
+export { FixedScrollProvider, useFixedScroll, useIsFixedScrollEnabled} from "./FixedScrollProvider";

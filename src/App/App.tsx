@@ -3,18 +3,27 @@ import { Header } from "./Header";
 import { Suspense } from "react";
 import { pages, pageIds } from "pages";
 import { useRoute, RouteProvider } from "routes";
+import {
+  FixedScrollProvider,
+  useIsFixedScrollEnabled,
+} from "tools/fixed-scroll";
 
 export function App() {
   return (
     <RouteProvider>
-      <AppContextualized />
+      <FixedScrollProvider>
+        <AppContextualized />
+      </FixedScrollProvider>
     </RouteProvider>
   );
 }
 
 function AppContextualized() {
-  const { classes } = useStyles();
   const route = useRoute();
+
+  const { isFixedScrollEnabled } = useIsFixedScrollEnabled();
+
+  const { classes } = useStyles({ isFixedScrollEnabled });
 
   return (
     <>
@@ -23,7 +32,6 @@ function AppContextualized() {
           body: {
             margin: 0,
             padding: 0,
-            overflow: "hidden",
           },
           "*": {
             boxSizing: "border-box",
@@ -31,10 +39,7 @@ function AppContextualized() {
         }}
       />
       <div className={classes.root}>
-        <Header
-          pageId={route.name}
-          className={classes.header}
-        />
+        <Header pageId={route.name} className={classes.header} />
         <main className={classes.main}>
           <Suspense fallback={<p>Loading...</p>}>
             {(() => {
@@ -61,21 +66,40 @@ function AppContextualized() {
   );
 }
 
-const useStyles = tss.withName({ App }).create({
-  root: {
-    height: "100vh",
-    border: "10px solid red",
-    display: "flex",
-    flexDirection: "column",
-  },
-  header: {
-    height: 50,
-  },
-  main: {
-    flex: 1,
-    border: "5px solid green",
-  },
-  page: {
-    height: "100%",
-  },
-});
+const useStyles = tss
+  .withName({ App })
+  .withParams<{ isFixedScrollEnabled: boolean }>()
+  .create(({ isFixedScrollEnabled }) => ({
+    root: isFixedScrollEnabled
+      ? {
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }
+      : {},
+    header: (() => {
+      const common = {
+        border: "4px solid red",
+        height: "50px",
+      };
+
+      return isFixedScrollEnabled
+        ? {
+            ...common,
+          }
+        : {
+            ...common,
+            position: "fixed",
+            top: 0,
+            width: "100%",
+          };
+    })(),
+    main: isFixedScrollEnabled
+      ? {
+          flex: 1,
+        }
+      : {
+          marginTop: "50px",
+        },
+    page: isFixedScrollEnabled ? { height: "100%" } : {},
+  }));

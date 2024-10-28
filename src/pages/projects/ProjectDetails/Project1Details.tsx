@@ -26,8 +26,7 @@ export default function Project1Details(props: Props) {
       })()}
       <DetailsNavigationButtons
         route={route}
-        detailsIndex={route.params.detailsIndex}
-        isLastDetails={route.params.detailsIndex === 2}
+        detailsCount={3}
       />
     </div>
   );
