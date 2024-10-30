@@ -15,12 +15,12 @@ export default function Project1Details(props: Props) {
   const { cx, classes } = useStyles();
 
   useEnableFixedScrollBySections({
-    "initialSectionIndex": route.params.detailsIndex,
-    "sectionCount": 3,
-    "onSectionChange": (sectionIndex) => {
+    initialSectionIndex: route.params.detailsIndex,
+    sectionCount: 3,
+    onSectionChange: (sectionIndex) => {
       routes[route.name]({
         ...route.params,
-        "detailsIndex": sectionIndex,
+        detailsIndex: sectionIndex,
       }).replace();
     },
   });
@@ -37,10 +37,7 @@ export default function Project1Details(props: Props) {
             return <Project1Details2 />;
         }
       })()}
-      <DetailsNavigationButtons
-        route={route}
-        detailsCount={3}
-      />
+      <DetailsNavigationButtons route={route} detailsCount={3} />
     </div>
   );
 }
