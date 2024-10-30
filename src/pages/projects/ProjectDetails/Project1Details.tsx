@@ -15,8 +15,8 @@ export default function Project1Details(props: Props) {
   const { cx, classes } = useStyles();
 
   useEnableFixedScrollBySections({
-    initialSectionIndex: route.params.detailsIndex,
     sectionCount: 3,
+    initialSectionIndex: route.params.detailsIndex,
     onSectionChange: (sectionIndex) => {
       routes[route.name]({
         ...route.params,
