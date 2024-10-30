@@ -109,17 +109,27 @@ function useEnableFixedScroll(params: {
 }) {
   const { height, initialScrollPercentage } = params;
 
-  const { state, setState } = useContextValue();
+  const { setState } = useContextValue();
 
   useEffect(() => {
+
+    const evtCurrentScrollPercentage= Evt.create(initialScrollPercentage);
+
+    const ctx = Evt.newCtx();
+
+    evtCurrentScrollPercentage.attach(ctx, (percentage) => {
+      setCurrentScrollPercentage(percentage);
+    });
+
     setState({
       isEnabled: true,
       height,
       initialScrollPercentage,
-      evtCurrentScrollPercentage: Evt.create(initialScrollPercentage),
+      evtCurrentScrollPercentage,
     });
 
     return () => {
+      ctx.done();
       setState({
         isEnabled: false,
       });
@@ -129,24 +139,6 @@ function useEnableFixedScroll(params: {
   const [currentScrollPercentage, setCurrentScrollPercentage] = useState(
     initialScrollPercentage
   );
-
-  useEffect(() => {
-    if (!state.isEnabled) {
-      return;
-    }
-
-    const { evtCurrentScrollPercentage } = state;
-
-    const ctx = Evt.newCtx();
-
-    evtCurrentScrollPercentage.attach(ctx, (percentage) => {
-      setCurrentScrollPercentage(percentage);
-    });
-
-    return () => {
-      ctx.done();
-    };
-  }, [state]);
 
   return { currentScrollPercentage };
 }
@@ -158,11 +150,13 @@ export function useEnableFixedScrollBySections(params: {
 }) {
   const { sectionCount, initialSectionIndex, onSectionChange } = params;
 
+
   const { windowInnerHeight } = useWindowInnerHeight();
 
   const [initialScrollPercentage, setInitialScrollPercentage] = useState(() =>
     getScrollPercentage({ sectionCount, sectionIndex: initialSectionIndex })
   );
+
 
   const { currentScrollPercentage } = useEnableFixedScroll({
     height: windowInnerHeight + (windowInnerHeight / 2) * sectionCount,

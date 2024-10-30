@@ -32,6 +32,7 @@ function AppContextualized() {
           body: {
             margin: 0,
             padding: 0,
+            scrollBehavior: "auto"
           },
           "*": {
             boxSizing: "border-box",
