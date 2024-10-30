@@ -1,6 +1,8 @@
 import { tss } from "tss";
 import { DetailsNavigationButtons } from "./DetailsNavigationButtons";
 import type { PageRoute } from "../route";
+import { useEnableFixedScrollBySections } from "tools/fixed-scroll";
+import { routes } from "routes";
 
 type Props = {
   className?: string;
@@ -11,6 +13,17 @@ export default function Project1Details(props: Props) {
   const { className, route } = props;
 
   const { cx, classes } = useStyles();
+
+  useEnableFixedScrollBySections({
+    "initialSectionIndex": route.params.detailsIndex,
+    "sectionCount": 3,
+    "onSectionChange": (sectionIndex) => {
+      routes[route.name]({
+        ...route.params,
+        "detailsIndex": sectionIndex,
+      }).replace();
+    },
+  });
 
   return (
     <div className={cx(classes.root, className)}>

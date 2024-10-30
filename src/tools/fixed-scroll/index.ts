@@ -1,1 +1,1 @@
-export { FixedScrollProvider, useFixedScroll, useIsFixedScrollEnabled} from "./FixedScrollProvider";
+export { FixedScrollProvider, useIsFixedScrollEnabled, useEnableFixedScrollBySections } from "./FixedScrollProvider";

@@ -67,8 +67,5 @@ function getScrollPercentage(params: { scrollY: number; height: number; windowIn
 function getScrollY(params: { scrollPercentage: number; height: number; windowInnerHeight: number }) {
     const { scrollPercentage, height, windowInnerHeight } = params;
     const scrollY=  ~~((height - windowInnerHeight) * (scrollPercentage / 100));
-
-    console.log(`${scrollPercentage}% -> ${scrollY}px`);
-
     return scrollY;
 }
